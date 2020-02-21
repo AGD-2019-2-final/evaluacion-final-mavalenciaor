@@ -27,3 +27,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+selected_data = FOREACH u GENERATE firstname, SUBSTRING(firstname, 0, 1) AS fn_f, color AS color;
+filtered_data = FILTER selected_data BY (fn_f == 'Z') AND (color == 'blue');
+final_data = FOREACH filtered_data GENERATE firstname, color;
+STORE final_data INTO 'output';
+fs -get output/ .;

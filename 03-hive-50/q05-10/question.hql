@@ -40,3 +40,16 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS let_by_year;
+CREATE TABLE let_by_year AS
+SELECT a.year_s, a.let, COUNT(*)
+FROM(
+SELECT YEAR(c4) AS year_s, lets AS let 
+FROM tbl0 
+LATERAL VIEW explode(c5) tbl0 AS lets) a
+GROUP BY a.year_s, a.let
+ORDER BY a.year_s ASC, a.let ASC;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM let_by_year;

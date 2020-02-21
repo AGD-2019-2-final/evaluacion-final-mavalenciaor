@@ -27,4 +27,18 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS cant_let_clav;
+CREATE TABLE cant_let_clav AS
+SELECT f.v1, f.v2, COUNT(*)
+FROM
+(SELECT a.c AS v1, a.k AS v2
+FROM  
+(SELECT c2, k 
+FROM t0 
+LATERAL VIEW explode(c3) t0 AS k, v) a
+LATERAL VIEW explode(a.c2) a AS c) f
+GROUP BY f.v1, f.v2;
 
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM cant_let_clav;

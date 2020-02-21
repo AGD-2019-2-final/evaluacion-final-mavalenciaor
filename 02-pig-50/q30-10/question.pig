@@ -41,3 +41,23 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+dates = FOREACH u GENERATE birthday, ToDate(birthday, 'yyyy-MM-dd') AS birthday_d;
+dates_fixed = FOREACH dates GENERATE birthday, ToString(birthday_d, 'dd') AS day_two_d, GetDay(birthday_d) AS day_one_d,
+(CASE ToString(ToDate(birthday, 'yyyy-MM-dd'), 'EEE') 
+    WHEN 'Mon' THEN 'lun'
+    WHEN 'Tue' THEN 'mar'
+    WHEN 'Wed' THEN 'mie'
+    WHEN 'Thu' THEN 'jue'
+    WHEN 'Fri' THEN 'vie'
+    WHEN 'Sat' THEN 'sab'
+    ELSE 'dom' END) AS day_abb,
+(CASE ToString(ToDate(birthday, 'yyyy-MM-dd'), 'EEE') 
+    WHEN 'Mon' THEN 'lunes'
+    WHEN 'Tue' THEN 'martes'
+    WHEN 'Wed' THEN 'miercoles'
+    WHEN 'Thu' THEN 'jueves'
+    WHEN 'Fri' THEN 'viernes'
+    WHEN 'Sat' THEN 'sabado'
+    ELSE 'domingo' END) AS whole_day;
+STORE dates_fixed INTO 'output' USING PigStorage(',');
+fs -get output/ .;

@@ -39,3 +39,18 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+DROP TABLE IF EXISTS joined_kv;
+CREATE TABLE joined_kv AS
+(SELECT a.c1, a.c2, b.v
+FROM
+(SELECT c1, c2
+FROM tbl0) a LEFT JOIN
+(SELECT c1, k, v
+FROM tbl1
+LATERAL VIEW explode(c4) tbl1 AS k, v) b
+ON (a.c1 = b.c1 AND a.c2 = b.k));
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM joined_kv;

@@ -40,4 +40,19 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS lets_upp;
+CREATE TABLE lets_upp AS
+SELECT b.result
+FROM(SELECT a.c1, concat_ws(':', collect_set(UPPER(a.c5))) AS result
+FROM(SELECT c1 AS c1, lets AS c5 
+FROM tbl0 
+LATERAL VIEW explode(c5) tbl0 AS lets) a
+GROUP BY a.c1) b;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM lets_upp;
+
+
+
 

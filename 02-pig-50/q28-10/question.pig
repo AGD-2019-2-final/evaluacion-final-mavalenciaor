@@ -30,3 +30,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+selected_data = FOREACH u GENERATE REGEX_EXTRACT(birthday, '(....)-(..)-(..)', 1) AS b_year;
+result = FOREACH selected_data GENERATE b_year, SUBSTRING(b_year, 2, 4);
+STORE result INTO 'output' USING PigStorage(',');
+fs -get output/ .;

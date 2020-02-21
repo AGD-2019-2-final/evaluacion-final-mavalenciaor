@@ -41,4 +41,16 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS lets_map_vals;
+CREATE TABLE lets_map_vals AS
+SELECT a.c2, SUM(a.v)
+FROM
+(SELECT c2, v
+FROM tbl0
+LATERAL VIEW explode(c6) tbl0 AS k, v) a
+GROUP BY a.c2;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM lets_map_vals;
 

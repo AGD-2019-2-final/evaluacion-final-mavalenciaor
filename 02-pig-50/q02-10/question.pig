@@ -9,4 +9,7 @@ fs -rm -f -r output;
 --  >>> Escriba el codigo del mapper a partir de este punto <<<
 -- 
 
-
+lines = LOAD 'data.tsv' AS (let:CHARARRAY, dat:CHARARRAY, numb:INT);
+order_by_data = ORDER lines BY let ASC, numb ASC;
+STORE order_by_data INTO 'output';
+fs -get output/ .;

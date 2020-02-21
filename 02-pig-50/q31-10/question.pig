@@ -20,3 +20,10 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+dates = FOREACH u GENERATE birthday, ToDate(birthday, 'yyyy-MM-dd') AS birthday_d;
+b_years = FOREACH dates GENERATE GetYear(birthday_d) AS years;
+grouped_data = GROUP b_years BY years;
+result = FOREACH grouped_data GENERATE group, COUNT(b_years);
+STORE result INTO 'output' USING PigStorage(',');
+fs -get output/ .;

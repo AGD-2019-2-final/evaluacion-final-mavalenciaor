@@ -40,3 +40,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS unique_values;
+CREATE TABLE unique_values AS
+SELECT DISTINCT a.*
+FROM (SELECT explode(c5) FROM tbl0) a;
+
+INSERT OVERWRITE LOCAL DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM unique_values;
+
+

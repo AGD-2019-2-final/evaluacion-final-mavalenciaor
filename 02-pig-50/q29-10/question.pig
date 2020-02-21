@@ -40,3 +40,34 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+selected_data = FOREACH u GENERATE birthday,
+                                   REGEX_EXTRACT(birthday, '(....)-(..)-(..)', 2) AS b_year;
+months_data = FOREACH selected_data GENERATE birthday, (CASE b_year 
+                                                        WHEN '01' THEN 'ene'
+                                                        WHEN '02' THEN 'feb'
+                                                        WHEN '03' THEN 'mar'
+                                                        WHEN '04' THEN 'abr'
+                                                        WHEN '05' THEN 'may'
+                                                        WHEN '06' THEN 'jun'
+                                                        WHEN '07' THEN 'jul'
+                                                        WHEN '08' THEN 'ago'
+                                                        WHEN '09' THEN 'sep'
+                                                        WHEN '10' THEN 'oct'
+                                                        WHEN '11' THEN 'nov'
+                                                        ELSE 'dic' END), b_year,
+                                                        (CASE b_year 
+                                                        WHEN '01' THEN '1'
+                                                        WHEN '02' THEN '2'
+                                                        WHEN '03' THEN '3'
+                                                        WHEN '04' THEN '4'
+                                                        WHEN '05' THEN '5'
+                                                        WHEN '06' THEN '6'
+                                                        WHEN '07' THEN '7'
+                                                        WHEN '08' THEN '8'
+                                                        WHEN '09' THEN '9'
+                                                        WHEN '10' THEN '10'
+                                                        WHEN '11' THEN '11'
+                                                        ELSE '12' END);
+STORE months_data INTO 'output' USING PigStorage(',');
+fs -get output/ .;

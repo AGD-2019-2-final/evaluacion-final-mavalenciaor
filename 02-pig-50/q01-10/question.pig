@@ -9,3 +9,11 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+
+lines = LOAD 'data.tsv' AS (let:CHARARRAY, dat:CHARARRAY, numb:INT);
+group_let = GROUP lines BY let;
+appcount = FOREACH group_let GENERATE group, COUNT(lines.numb);
+DUMP appcount;
+STORE appcount INTO 'output';
+fs -get output/ .;

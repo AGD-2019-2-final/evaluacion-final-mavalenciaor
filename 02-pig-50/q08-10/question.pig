@@ -14,3 +14,11 @@ fs -rm -f -r output;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+
+records = LOAD 'data.tsv' AS (c1:CHARARRAY, c2:BAG{t:tuple(v:CHARARRAY)}, c3:MAP[]);
+combs = FOREACH records GENERATE FLATTEN(c2.v), FLATTEN(c3);
+combs_filt = FOREACH combs GENERATE ($0) AS c1, ($1) AS c2;
+grouped = GROUP combs_filt BY (c1, c2);
+final_count = FOREACH grouped GENERATE group, COUNT(combs_filt);
+STORE final_count INTO 'output';
+fs -get output/ .;
