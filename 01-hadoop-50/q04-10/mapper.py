@@ -7,4 +7,5 @@ if __name__ == "__main__":
 
     for line in sys.stdin:
         line = line.strip()
-        sys.stdout.write("{}\t1\n".format(line.split("   ")[0]))
+        let, dat, numb = line.split("   ") 
+        sys.stdout.write("{}\t{}\t{}\n".format(dat, let, numb))

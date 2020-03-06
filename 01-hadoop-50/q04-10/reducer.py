@@ -10,20 +10,5 @@ if __name__ == '__main__':
 
     for line in sys.stdin:
 
-        key, val = line.split("\t")
-        val = int(val)
-
-        if key == curkey:
-
-            total += val
-
-        else: 
-
-            if curkey is not None:
-
-                sys.stdout.write("{},{}\n".format(curkey, total))
-
-            curkey = key
-            total = val
-        
-    sys.stdout.write("{},{}\n".format(curkey, total))
+        key, val1, val2 = line.split("\t")
+        sys.stdout.write("{}\t{}\t{}\n".format(val1, key, val2))
