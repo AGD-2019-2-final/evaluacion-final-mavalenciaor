@@ -28,6 +28,8 @@ fs -rm -f -r output;
 --  >>> Escriba su respuesta a partir de este punto <<<
 -- 
 
+fs -put truck_event_text_partition.csv;
+
 records = LOAD 'truck_event_text_partition.csv' USING PigStorage (',')
                                                     AS (driverId:INT, truckId:INT, eventTime:CHARARRAY, eventType:CHARARRAY,
                                                     longitude:DOUBLE, latitude:DOUBLE, eventKey:CHARARRAY,
@@ -41,3 +43,4 @@ ranked_filt_f = FOREACH ranked_filt GENERATE driverId, truckId, eventTime;
 sorted_records = ORDER ranked_filt_f BY driverId ASC, truckId ASC, eventTime ASC;
 STORE sorted_records INTO 'output' USING PigStorage(',');
 fs -get output/ .;
+fs -rm truck_event_text_partition.csv;

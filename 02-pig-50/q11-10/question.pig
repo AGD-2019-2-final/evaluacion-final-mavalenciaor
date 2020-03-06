@@ -28,6 +28,7 @@
 -- 
 fs -rm -f -r output;
 --
+fs -put data.csv;
 u = LOAD 'data.csv' USING PigStorage(',') 
     AS (id:int, 
         firstname:CHARARRAY, 
@@ -43,3 +44,4 @@ surname_vars = FOREACH u GENERATE surname, UPPER(surname), LOWER(surname);
 surname_sorted = ORDER surname_vars by surname;
 STORE surname_sorted INTO 'output' USING PigStorage(',');
 fs -get output/ .;
+fs -rm data.csv;

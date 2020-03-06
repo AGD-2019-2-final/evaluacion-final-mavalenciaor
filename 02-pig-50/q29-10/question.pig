@@ -40,7 +40,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
-
+fs -put data.csv;
 selected_data = FOREACH u GENERATE birthday,
                                    REGEX_EXTRACT(birthday, '(....)-(..)-(..)', 2) AS b_year;
 months_data = FOREACH selected_data GENERATE birthday, (CASE b_year 
@@ -71,3 +71,4 @@ months_data = FOREACH selected_data GENERATE birthday, (CASE b_year
                                                         ELSE '12' END);
 STORE months_data INTO 'output' USING PigStorage(',');
 fs -get output/ .;
+fs -rm data.csv;

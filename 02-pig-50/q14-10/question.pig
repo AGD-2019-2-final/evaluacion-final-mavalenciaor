@@ -17,6 +17,7 @@
 -- 
 fs -rm -f -r output;
 --
+fs -put data.csv;
 u = LOAD 'data.csv' USING PigStorage(',') 
     AS (id:int, 
         firstname:CHARARRAY, 
@@ -33,3 +34,4 @@ filtered_data = FILTER colors_g BY color_f != 'b';
 final_data = FOREACH filtered_data GENERATE color;
 STORE final_data INTO 'output';
 fs -get output/ .;
+fs -rm data.csv;

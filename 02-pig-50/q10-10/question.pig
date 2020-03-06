@@ -27,8 +27,10 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+fs -put data.csv;
 long_surname = FOREACH u GENERATE surname AS surname, SIZE(surname) AS sizeof;
 sorted_l_surname = ORDER long_surname BY sizeof DESC, surname ASC;
 limited_data = LIMIT sorted_l_surname 5; 
 STORE limited_data INTO 'output' USING PigStorage(',');
 fs -get output/ .;
+fs -rm data.csv;

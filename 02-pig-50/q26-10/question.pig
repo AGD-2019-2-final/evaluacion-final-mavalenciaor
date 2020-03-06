@@ -28,8 +28,10 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+fs -put data.csv;
 selected_data = FOREACH u GENERATE firstname, SUBSTRING(firstname, 0, 1) AS first_let;
 filtered_data = FILTER selected_data BY first_let >= 'M';
 result = FOREACH filtered_data GENERATE firstname;
 STORE result INTO 'output';
 fs -get output/ .;
+fs -rm data.csv;

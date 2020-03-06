@@ -13,6 +13,8 @@ fs -rm -f -r output;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+fs -put data.tsv;
+
 records = LOAD 'data.tsv' AS (c1:CHARARRAY, c2:CHARARRAY, c3:CHARARRAY);
 third_col = FOREACH records GENERATE c3;
 third_col_b = FOREACH third_col GENERATE REPLACE(c3, '\\]', '') AS c3;
@@ -24,3 +26,5 @@ grouped = GROUP div BY c3;
 letcount = FOREACH grouped GENERATE group, COUNT(div);
 STORE letcount INTO 'output' USING PigStorage(',');
 fs -get output/ .;
+
+fs -rm data.tsv;

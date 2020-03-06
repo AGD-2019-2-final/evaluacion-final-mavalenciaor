@@ -23,6 +23,7 @@
 -- 
 fs -rm -f -r output;
 --
+fs -put data.csv;
 u = LOAD 'data.csv' USING PigStorage(',') 
     AS (id:int, 
         firstname:CHARARRAY, 
@@ -39,3 +40,4 @@ filtered_data = FILTER first_l BY first IN ('D', 'E', 'F', 'G', 'H', 'I', 'J', '
 result = FOREACH filtered_data GENERATE surname;
 STORE result INTO 'output';
 fs -get output/ .;
+fs -rm data.csv;
